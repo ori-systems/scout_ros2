@@ -2,7 +2,6 @@
 <robot name="scout_mini_omni_wheel" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="scout_mini_omni_wheel" params="wheel_prefix mesh_name axis_xyz *joint_pose">
     <link name="${wheel_prefix}_wheel_link">
-      <!-- Approximate 1 kg wheel inertia. Confirm with actual mass/measurements before dynamic simulation. -->
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <mass value="1.0"/>
@@ -15,8 +14,6 @@
           <mesh filename="package://scout_description/meshes/scout_mini_omni/${mesh_name}"/>
         </geometry>
       </visual>
-      <!-- Simplified collision for Nav2 footprint and approximate rigid-body placement.
-           This cylinder cannot simulate lateral mecanum slip or roller traction. -->
       <collision>
         <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
         <geometry>
@@ -28,8 +25,6 @@
       <parent link="base_link"/>
       <child link="${wheel_prefix}_wheel_link"/>
       <xacro:insert_block name="joint_pose"/>
-      <!-- Keep the existing Scout Mini convention: left world axis -Y,
-           right world axis +Y. Validate encoder sign on hardware. -->
       <axis xyz="${axis_xyz}"/>
     </joint>
   </xacro:macro>

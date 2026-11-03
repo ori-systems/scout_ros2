@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Coloured Scout Mini Omni convenience URDF; source is the Xacro. -->
 <robot name="scout_mini_omni">
   <link name="base_link">
     <visual>

@@ -16,8 +16,6 @@
         <mesh filename="package://scout_description/meshes/scout_mini_omni/chassis.dae"/>
       </geometry>
     </visual>
-    <!-- Stationary OEM motor/axle casings, rendered separately so they do NOT
-         spin with the wheel joints. Each DAE is already in base_link metres. -->
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry><mesh filename="package://scout_description/meshes/scout_mini_omni/front_left_motor.dae"/></geometry>
@@ -52,8 +50,6 @@
     <child link="base_footprint"/>
   </joint>
 
-  <!-- The legacy Mini description keeps mass on a separate fixed link.
-       These inertias approximate an 18 kg box, NOT measured CAD mass properties. -->
   <link name="inertial_link">
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0"/>
