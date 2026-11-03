@@ -1,8 +1,4 @@
 <?xml version="1.0"?>
-<!-- Scout Mini Omni colour-preserving wheel link. DAE stores per-face CAD material colours.
-     The OEM motor/axle meshes live on base_link and do not rotate.
-     The individual roller details are VISUAL only. Gazebo's cylinder
-     collision geometry is NOT a mecanum contact model. -->
 <robot name="scout_mini_omni_wheel" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="scout_mini_omni_wheel" params="wheel_prefix mesh_name axis_xyz *joint_pose">
     <link name="${wheel_prefix}_wheel_link">

@@ -1,15 +1,6 @@
 <?xml version="1.0"?>
-<!-- Scout Mini Omni: canonical, colour-preserving description generated from the
-     latest 18-015-A001_scout mini lite with OEM brackets.STEP assembly.
-     The latest provided STEP geometry is the single geometry source of truth.
-     STEP x/y are rotated 180 degrees and STEP z is raised 68.999 mm to fit
-     the existing ROS base_link convention. Confirm physical front direction. -->
 <robot name="scout_mini_omni" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:include filename="$(find scout_description)/urdf/scout_mini/scout_mini_omni_wheel.xacro"/>
-
-  <!-- Measurements from the latest STEP CAD assembly, metres.
-       Rotating wheel rim approx 151 mm OD / 48 mm wide; motor assembly is wider.
-       This STEP geometry supersedes all earlier Scout Mini Omni exports. -->
   <xacro:property name="wheelbase" value="0.4526"/>
   <xacro:property name="track" value="0.5456008"/>
   <xacro:property name="wheel_vertical_offset" value="-0.096"/>
