@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!-- Scout Mini Omni: canonical, colour-preserving description generated from the
+     latest 18-015-A001_scout mini lite with OEM brackets.STEP assembly.
+     The latest provided STEP geometry is the single geometry source of truth.
+     STEP x/y are rotated 180 degrees and STEP z is raised 68.999 mm to fit
+     the existing ROS base_link convention. Confirm physical front direction. -->
+<robot name="scout_mini_omni" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find scout_description)/urdf/scout_mini/scout_mini_omni_wheel.xacro"/>
+
+  <!-- Measurements from the latest STEP CAD assembly, metres.
+       Rotating wheel rim approx 151 mm OD / 48 mm wide; motor assembly is wider.
+       This STEP geometry supersedes all earlier Scout Mini Omni exports. -->
+  <xacro:property name="wheelbase" value="0.4526"/>
+  <xacro:property name="track" value="0.5456008"/>
+  <xacro:property name="wheel_vertical_offset" value="-0.096"/>
+  <xacro:property name="wheel_radius" value="0.0754335"/>
+  <xacro:property name="body_x_size" value="0.5539"/>
+  <xacro:property name="body_y_size" value="0.3923"/>
+  <xacro:property name="body_z_size" value="0.18235"/>
+
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://scout_description/meshes/scout_mini_omni/chassis.dae"/>
+      </geometry>
+    </visual>
+    <!-- Stationary OEM motor/axle casings, rendered separately so they do NOT
+         spin with the wheel joints. Each DAE is already in base_link metres. -->
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><mesh filename="package://scout_description/meshes/scout_mini_omni/front_left_motor.dae"/></geometry>
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><mesh filename="package://scout_description/meshes/scout_mini_omni/front_right_motor.dae"/></geometry>
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><mesh filename="package://scout_description/meshes/scout_mini_omni/rear_left_motor.dae"/></geometry>
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><mesh filename="package://scout_description/meshes/scout_mini_omni/rear_right_motor.dae"/></geometry>
+    </visual>
+
+    <!-- Simplified body collision; use a footprint calibrated to the robot for Nav2. -->
+    <collision>
+      <origin xyz="-0.02132 0 -0.02201" rpy="0 0 0"/>
+      <geometry>
+        <box size="${body_x_size} ${body_y_size} ${body_z_size}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Existing ROS frame names are retained for TF/Nav2 compatibility. -->
+  <link name="base_footprint"/>
+  <joint name="base_footprint_joint" type="fixed">
+    <origin xyz="0 0 ${wheel_vertical_offset - wheel_radius}" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="base_footprint"/>
+  </joint>
+
+  <!-- The legacy Mini description keeps mass on a separate fixed link.
+       These inertias approximate an 18 kg box, NOT measured CAD mass properties. -->
+  <link name="inertial_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="18"/>
+      <inertia ixx="0.2779" ixy="0" ixz="0"
+               iyy="0.5206" iyz="0" izz="0.6994"/>
+    </inertial>
+  </link>
+  <joint name="inertial_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="inertial_link"/>
+  </joint>
+
+  <!-- Separate corner-specific meshes preserve the roller orientation. -->
+  <xacro:scout_mini_omni_wheel wheel_prefix="front_left" mesh_name="front_left.dae" axis_xyz="0 -1 0">
+    <origin xyz="${wheelbase/2} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0"/>
+  </xacro:scout_mini_omni_wheel>
+  <xacro:scout_mini_omni_wheel wheel_prefix="front_right" mesh_name="front_right.dae" axis_xyz="0 1 0">
+    <origin xyz="${wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0"/>
+  </xacro:scout_mini_omni_wheel>
+  <xacro:scout_mini_omni_wheel wheel_prefix="rear_left" mesh_name="rear_left.dae" axis_xyz="0 -1 0">
+    <origin xyz="${-wheelbase/2} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0"/>
+  </xacro:scout_mini_omni_wheel>
+  <xacro:scout_mini_omni_wheel wheel_prefix="rear_right" mesh_name="rear_right.dae" axis_xyz="0 1 0">
+    <origin xyz="${-wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0"/>
+  </xacro:scout_mini_omni_wheel>
+
+  <!-- Legacy omni mounting frames, useful for fixed sensor transforms. -->
+  <link name="front_mount"/>
+  <joint name="front_mount_joint" type="fixed">
+    <origin xyz="0.175 0 0.069" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="front_mount"/>
+  </joint>
+  <link name="rear_mount"/>
+  <joint name="rear_mount_joint" type="fixed">
+    <origin xyz="-0.175 0 0.069" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="rear_mount"/>
+  </joint>
+</robot>

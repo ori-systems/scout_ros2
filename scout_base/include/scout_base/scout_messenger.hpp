@@ -260,8 +260,13 @@ class ScoutMessenger {
       lateral_speed = 0;
     }
 
-    double d_x = linear_speed * std::cos(theta_) * dt;
-    double d_y = (linear_speed * std::sin(theta_) + lateral_speed) * dt;
+    // Body-frame forward/lateral velocity must both be rotated into odom.
+    // Previously lateral_speed was added directly to world Y, which is wrong
+    // whenever the Scout Mini Omni has nonzero heading.
+    double d_x = (linear_speed * std::cos(theta_) -
+                  lateral_speed * std::sin(theta_)) * dt;
+    double d_y = (linear_speed * std::sin(theta_) +
+                  lateral_speed * std::cos(theta_)) * dt;
     double d_theta = angular_speed * dt;
 
     position_x_ += d_x;
