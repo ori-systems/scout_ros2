@@ -7,6 +7,9 @@
  * Copyright (c) 2021 Weston Robot Pte. Ltd.
  */
 
+#include <chrono>
+#include <thread>
+
 #include "scout_base/scout_base_ros.hpp"
 
 #include "scout_base/scout_messenger.hpp"
@@ -151,11 +154,10 @@ void ScoutBaseRos::Run() {
     // publish robot state at 50Hz while listening to twist commands
     messenger->SetupSubscription();
     keep_running_ = true;
-    rclcpp::Rate rate(50);
     while (keep_running_) {
       messenger->PublishStateToROS();
       rclcpp::spin_some(shared_from_this());
-      rate.sleep();
+      std::this_thread::sleep_for(std::chrono::milliseconds(20));
     }
   } else {
     std::unique_ptr<ScoutMessenger<ScoutMiniOmniRobot>> messenger =
@@ -184,12 +186,11 @@ void ScoutBaseRos::Run() {
 
     // publish robot state at 50Hz while listening to twist commands
     messenger->SetupSubscription();
-    rclcpp::Rate rate(50);
     keep_running_ = true;
     while (keep_running_) {
       messenger->PublishStateToROS();
       rclcpp::spin_some(shared_from_this());
-      rate.sleep();
+      std::this_thread::sleep_for(std::chrono::milliseconds(20));
     }
   }
 }
