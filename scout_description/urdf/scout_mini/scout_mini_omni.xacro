@@ -8,34 +8,36 @@
   <xacro:property name="body_x_size" value="0.5539"/>
   <xacro:property name="body_y_size" value="0.3923"/>
   <xacro:property name="body_z_size" value="0.18235"/>
+  <!-- Align the CAD model's front with ROS +X; keep the working base frame. -->
+  <xacro:property name="cad_yaw" value="${pi}"/>
 
   <link name="base_link">
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 ${cad_yaw}"/>
       <geometry>
         <mesh filename="package://scout_description/meshes/scout_mini_omni/chassis.dae"/>
       </geometry>
     </visual>
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 ${cad_yaw}"/>
       <geometry><mesh filename="package://scout_description/meshes/scout_mini_omni/front_left_motor.dae"/></geometry>
     </visual>
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 ${cad_yaw}"/>
       <geometry><mesh filename="package://scout_description/meshes/scout_mini_omni/front_right_motor.dae"/></geometry>
     </visual>
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 ${cad_yaw}"/>
       <geometry><mesh filename="package://scout_description/meshes/scout_mini_omni/rear_left_motor.dae"/></geometry>
     </visual>
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 ${cad_yaw}"/>
       <geometry><mesh filename="package://scout_description/meshes/scout_mini_omni/rear_right_motor.dae"/></geometry>
     </visual>
 
     <!-- Simplified body collision; use a footprint calibrated to the robot for Nav2. -->
     <collision>
-      <origin xyz="-0.02132 0 -0.02201" rpy="0 0 0"/>
+      <origin xyz="0.02132 0 -0.02201" rpy="0 0 0"/>
       <geometry>
         <box size="${body_x_size} ${body_y_size} ${body_z_size}"/>
       </geometry>
@@ -64,17 +66,17 @@
     <child link="inertial_link"/>
   </joint>
 
-  <!-- Separate corner-specific meshes preserve the roller orientation. -->
-  <xacro:scout_mini_omni_wheel wheel_prefix="front_left" mesh_name="front_left.dae" axis_xyz="0 -1 0">
+  <!-- A half-turn exchanges opposite CAD corners; retain ROS corner names. -->
+  <xacro:scout_mini_omni_wheel wheel_prefix="front_left" mesh_name="rear_right.dae" axis_xyz="0 -1 0" mesh_yaw="${cad_yaw}">
     <origin xyz="${wheelbase/2} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0"/>
   </xacro:scout_mini_omni_wheel>
-  <xacro:scout_mini_omni_wheel wheel_prefix="front_right" mesh_name="front_right.dae" axis_xyz="0 1 0">
+  <xacro:scout_mini_omni_wheel wheel_prefix="front_right" mesh_name="rear_left.dae" axis_xyz="0 1 0" mesh_yaw="${cad_yaw}">
     <origin xyz="${wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0"/>
   </xacro:scout_mini_omni_wheel>
-  <xacro:scout_mini_omni_wheel wheel_prefix="rear_left" mesh_name="rear_left.dae" axis_xyz="0 -1 0">
+  <xacro:scout_mini_omni_wheel wheel_prefix="rear_left" mesh_name="front_right.dae" axis_xyz="0 -1 0" mesh_yaw="${cad_yaw}">
     <origin xyz="${-wheelbase/2} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0"/>
   </xacro:scout_mini_omni_wheel>
-  <xacro:scout_mini_omni_wheel wheel_prefix="rear_right" mesh_name="rear_right.dae" axis_xyz="0 1 0">
+  <xacro:scout_mini_omni_wheel wheel_prefix="rear_right" mesh_name="front_left.dae" axis_xyz="0 1 0" mesh_yaw="${cad_yaw}">
     <origin xyz="${-wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0"/>
   </xacro:scout_mini_omni_wheel>
 

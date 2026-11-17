@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot name="scout_mini_omni_wheel" xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:macro name="scout_mini_omni_wheel" params="wheel_prefix mesh_name axis_xyz *joint_pose">
+  <xacro:macro name="scout_mini_omni_wheel" params="wheel_prefix mesh_name axis_xyz mesh_yaw:=0 *joint_pose">
     <link name="${wheel_prefix}_wheel_link">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -9,7 +9,7 @@
                  iyy="0.002890" iyz="0" izz="0.002288"/>
       </inertial>
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 ${mesh_yaw}"/>
         <geometry>
           <mesh filename="package://scout_description/meshes/scout_mini_omni/${mesh_name}"/>
         </geometry>
